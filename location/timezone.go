@@ -152,7 +152,7 @@ func (tz TZ) HourOffset() int {
 	}
 }
 
-func (tz TZ) Location() *time.Location {
+func (tz TZ) Timezone() *time.Location {
 	offset := tz.HourOffset()
 	return time.FixedZone(tz.String(), offset*SecondsInDay)
 }

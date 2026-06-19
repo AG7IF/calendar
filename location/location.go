@@ -2,6 +2,7 @@ package location
 
 import (
 	"regexp"
+	"time"
 
 	"github.com/golang/geo/s2"
 	"github.com/pkg/errors"
@@ -13,19 +14,19 @@ type Location struct {
 	name      string
 	latitude  unit.Angle
 	longitude unit.Angle
-	tz        TZ
+	timezone  *time.Location
 }
 
-func NewLocation(name string, latitude, longitude unit.Angle, tz TZ) Location {
+func NewLocation(name string, latitude, longitude unit.Angle, timezone *time.Location) Location {
 	return Location{
 		name:      name,
 		latitude:  latitude,
 		longitude: longitude,
-		tz:        tz,
+		timezone:  timezone,
 	}
 }
 
-func FromMGRS(name, mgrs string, tz TZ) (Location, error) {
+func FromMGRS(name, mgrs string, timezone *time.Location) (Location, error) {
 	l, err := coordconv.DefaultMGRSConverter.ConvertToGeodetic(mgrs)
 	if err != nil {
 		return Location{}, err
@@ -35,6 +36,7 @@ func FromMGRS(name, mgrs string, tz TZ) (Location, error) {
 		name:      name,
 		latitude:  unit.Angle(l.Lat.Radians()),
 		longitude: unit.Angle(l.Lng.Radians()),
+		timezone:  timezone,
 	}, nil
 }
 
@@ -53,8 +55,8 @@ func (l Location) MGRS(precision int) string {
 	return m
 }
 
-func (l Location) TZ() TZ {
-	return l.tz
+func (l Location) Timezone() *time.Location {
+	return l.timezone
 }
 
 func mgrsPrecision(mgrs string) (int, error) {

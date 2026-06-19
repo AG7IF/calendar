@@ -5,8 +5,6 @@ import (
 
 	"github.com/fxtlabs/date"
 	"github.com/pkg/errors"
-
-	"github.com/ag7if/calendar/location"
 )
 
 func ComputeNearestMonday(d date.Date) date.Date {
@@ -48,11 +46,11 @@ func ComputeLastDayOfMonth(d date.Date) int {
 	}
 }
 
-func TimeToLocalDate(t time.Time, tz location.TZ) date.Date {
-	local := t.In(tz.Location())
+func TimeToLocalDate(t time.Time, timezone *time.Location) date.Date {
+	local := t.In(timezone)
 	return date.New(local.Year(), local.Month(), local.Day())
 }
 
-func DateToLocalTime(d date.Date, tz location.TZ) time.Time {
-	return d.In(tz.Location())
+func DateToLocalTime(d date.Date, timezone *time.Location) time.Time {
+	return d.In(timezone)
 }
