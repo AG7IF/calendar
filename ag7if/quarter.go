@@ -6,7 +6,7 @@ import (
 	"github.com/fxtlabs/date"
 	"github.com/pkg/errors"
 
-	"github.com/derhabicht/planning-tools/pkg/calendar"
+	"github.com/ag7if/calendar/calendar"
 )
 
 func ComputeQuarter(d date.Date) (int, calendar.Q) {

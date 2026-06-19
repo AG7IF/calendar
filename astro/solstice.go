@@ -1,4 +1,4 @@
-package calendar
+package astro
 
 type Solstice int
 

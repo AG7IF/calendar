@@ -5,6 +5,9 @@ import (
 
 	cards "github.com/ag7if/playing-cards"
 	"github.com/fxtlabs/date"
+
+	"github.com/ag7if/calendar/astro"
+	"github.com/ag7if/calendar/location"
 )
 
 type Calendar interface {
@@ -24,6 +27,7 @@ type Calendar interface {
 	FirstSprint() Sprint
 	FirstWeek() Week
 	FetchWeek(year, week int) (Week, error)
+	Location() location.Location
 }
 
 type Period interface {
@@ -79,7 +83,7 @@ type Day interface {
 	Date() date.Date
 	ISODate() string
 	IsHoliday() (bool, bool, Holiday)
-	IsSolstice() Solstice
+	IsSolstice() astro.Solstice
 	OrdinalDay() int
 	Weekday() time.Weekday
 	WeekdayOccurrenceInMonth() int
@@ -90,7 +94,7 @@ type Day interface {
 }
 
 type SolsticeTable interface {
-	IsSolstice(date date.Date) Solstice
+	IsSolstice(date date.Date) astro.Solstice
 	FirstWinterSolstice() time.Time
 	VernalEquinox() time.Time
 	SummerSolstice() time.Time

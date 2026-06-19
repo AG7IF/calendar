@@ -6,7 +6,8 @@ import (
 	"github.com/fxtlabs/date"
 	"github.com/pkg/errors"
 
-	"github.com/derhabicht/planning-tools/pkg/calendar"
+	"github.com/ag7if/calendar/calc"
+	"github.com/ag7if/calendar/calendar"
 )
 
 func ComputeFiscalYear(d date.Date) int {
@@ -20,7 +21,7 @@ func ComputeFiscalYear(d date.Date) int {
 func ComputeFiscalYearStartDate(fy int) date.Date {
 	d := date.New(fy-1, time.October, 1)
 
-	d = calendar.ComputeNearestMonday(d)
+	d = calc.ComputeNearestMonday(d)
 
 	return d
 }

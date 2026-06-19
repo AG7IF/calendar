@@ -1,6 +1,8 @@
 package ag7if
 
 import (
+	"time"
+
 	cards "github.com/ag7if/playing-cards"
 	"github.com/pkg/errors"
 )
@@ -71,4 +73,25 @@ func ComputeWeekPlayingCard(isoweek int) (cards.Card, error) {
 	}
 
 	return deck[isoweek-1], nil
+}
+
+func WeekdayLetter(wd time.Weekday) string {
+	switch wd {
+	case time.Monday:
+		return "M"
+	case time.Tuesday:
+		return "T"
+	case time.Wednesday:
+		return "W"
+	case time.Thursday:
+		return "H"
+	case time.Friday:
+		return "F"
+	case time.Saturday:
+		return "S"
+	case time.Sunday:
+		return "U"
+	default:
+		panic(errors.Errorf("invalid weekday value: %d", wd))
+	}
 }

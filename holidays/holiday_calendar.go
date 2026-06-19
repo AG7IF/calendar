@@ -1,12 +1,11 @@
 package holidays
 
 import (
-	"time"
-
 	"github.com/fxtlabs/date"
 	"github.com/rickar/cal/v2"
 
-	"github.com/derhabicht/planning-tools/pkg/calendar"
+	"github.com/ag7if/calendar/calendar"
+	"github.com/ag7if/calendar/location"
 )
 
 type Holiday struct {
@@ -38,13 +37,12 @@ func (h Holiday) FullName() string {
 type HolidayCalendar struct {
 	calendar *cal.Calendar
 	holidays map[string]Holiday
-	loc      *time.Location
+	timezone location.TZ
 }
 
-func NewHolidayCalendar() *HolidayCalendar {
+func NewHolidayCalendar(timezone location.TZ) *HolidayCalendar {
 	holidayCalendar := new(cal.Calendar)
 	holidays := make(map[string]Holiday)
-	loc := calendar.GetLocation()
 
 	for k, v := range Ag7ifHolidays {
 		holidayCalendar.AddHoliday(v)
@@ -55,12 +53,12 @@ func NewHolidayCalendar() *HolidayCalendar {
 	return &HolidayCalendar{
 		calendar: holidayCalendar,
 		holidays: holidays,
-		loc:      loc,
+		timezone: timezone,
 	}
 }
 
 func (h *HolidayCalendar) IsHoliday(date date.Date) (bool, bool, calendar.Holiday) {
-	act, obs, calHoliday := h.calendar.IsHoliday(date.In(h.loc))
+	act, obs, calHoliday := h.calendar.IsHoliday(date.In(h.timezone.Location()))
 
 	if calHoliday != nil {
 		return act, obs, h.holidays[calHoliday.Name]

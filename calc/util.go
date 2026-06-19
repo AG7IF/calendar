@@ -1,35 +1,13 @@
-package calendar
+package calc
 
 import (
 	"time"
 
 	"github.com/fxtlabs/date"
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog/log"
 
-	"github.com/derhabicht/planning-tools/internal/config"
+	"github.com/ag7if/calendar/location"
 )
-
-func WeekdayLetter(wd time.Weekday) string {
-	switch wd {
-	case time.Monday:
-		return "M"
-	case time.Tuesday:
-		return "T"
-	case time.Wednesday:
-		return "W"
-	case time.Thursday:
-		return "H"
-	case time.Friday:
-		return "F"
-	case time.Saturday:
-		return "S"
-	case time.Sunday:
-		return "U"
-	default:
-		panic(errors.Errorf("invalid weekday value: %d", wd))
-	}
-}
 
 func ComputeNearestMonday(d date.Date) date.Date {
 	var dd int
@@ -70,24 +48,11 @@ func ComputeLastDayOfMonth(d date.Date) int {
 	}
 }
 
-func GetLocation() *time.Location {
-	loc, err := time.LoadLocation(config.GetString(config.HomeLocationTz))
-	if err != nil {
-		log.Warn().Str("tz", config.GetString(config.HomeLocationTz)).Msg("Unable to load time zone from config, " +
-			"defaulting to local system time")
-		loc = time.Local
-	}
-
-	return loc
-}
-
-func TimeToLocalDate(t time.Time) date.Date {
-	loc := GetLocation()
-	local := t.In(loc)
+func TimeToLocalDate(t time.Time, tz location.TZ) date.Date {
+	local := t.In(tz.Location())
 	return date.New(local.Year(), local.Month(), local.Day())
 }
 
-func DateToLocalTime(d date.Date) time.Time {
-	loc := GetLocation()
-	return d.In(loc)
+func DateToLocalTime(d date.Date, tz location.TZ) time.Time {
+	return d.In(tz.Location())
 }
