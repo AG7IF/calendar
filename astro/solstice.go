@@ -10,7 +10,7 @@ const (
 	WinterSolstice
 )
 
-func (s Solstice) LaTeX() string {
+func (s Solstice) LaTeX() []byte {
 	var solstice string
 	switch s {
 	case VernalEquinox:
@@ -25,5 +25,5 @@ func (s Solstice) LaTeX() string {
 		solstice = ""
 	}
 
-	return solstice
+	return []byte(solstice)
 }
