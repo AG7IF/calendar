@@ -8,7 +8,6 @@ import (
 	"github.com/soniakeys/meeus/v3/solstice"
 
 	"github.com/ag7if/calendar/calc"
-	"github.com/ag7if/calendar/location"
 )
 
 type SolsticeTable struct {
@@ -17,10 +16,10 @@ type SolsticeTable struct {
 	summerSolstice       time.Time
 	autumnalEquinox      time.Time
 	secondWinterSolstice time.Time
-	timezone             location.TZ
+	timezone             *time.Location
 }
 
-func NewSolsticeTable(fy int, timezone location.TZ) SolsticeTable {
+func NewSolsticeTable(fy int, timezone *time.Location) SolsticeTable {
 	winter1 := julian.JDToTime(solstice.December(fy - 1))
 	vernal := julian.JDToTime(solstice.March(fy))
 	summmer := julian.JDToTime(solstice.June(fy))

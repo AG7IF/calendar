@@ -65,25 +65,28 @@ func (mp MoonPhase) String() string {
 	}
 }
 
-func (mp MoonPhase) LaTeX() string {
+func (mp MoonPhase) LaTeX() []byte {
+	var phase string
 	switch mp {
 	case NewMoon:
-		return `\newmoon{}`
+		phase = `\newmoon{}`
 	case WaxingCrescent:
-		return `\waxingcrescent{}`
+		phase = `\waxingcrescent{}`
 	case FirstQuarter:
-		return `\firstquartermoon{}`
+		phase = `\firstquartermoon{}`
 	case WaxingGibbous:
-		return `\waxinggibbous{}`
+		phase = `\waxinggibbous{}`
 	case FullMoon:
-		return `\fullmoon{}`
+		phase = `\fullmoon{}`
 	case WaningGibbous:
-		return `\waninggibbous{}`
+		phase = `\waninggibbous{}`
 	case ThirdQuarter:
-		return `\thirdquartermoon{}`
+		phase = `\thirdquartermoon{}`
 	case WaningCrescent:
-		return `\waningcrescent{}`
+		phase = `\waningcrescent{}`
 	default:
 		panic(errors.Errorf("invalid MoonPhase value: %d", mp))
 	}
+
+	return []byte(phase)
 }

@@ -11,16 +11,19 @@ const (
 )
 
 func (s Solstice) LaTeX() string {
+	var solstice string
 	switch s {
 	case VernalEquinox:
-		return `\Aries`
+		solstice = `\Aries`
 	case SummerSolstice:
-		return `\Cancer`
+		solstice = `\Cancer`
 	case AutumnalEquinox:
-		return `\Libra`
+		solstice = `\Libra`
 	case WinterSolstice:
-		return `\Capricorn`
+		solstice = `\Capricorn`
 	default:
-		return ""
+		solstice = ""
 	}
+
+	return solstice
 }
