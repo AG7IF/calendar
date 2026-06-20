@@ -2,6 +2,8 @@ package recurrence
 
 import (
 	"encoding/json"
+	"maps"
+	"slices"
 	"time"
 
 	"github.com/fxtlabs/date"
@@ -69,28 +71,21 @@ func (r *Rule) UnmarshalJSON(raw []byte) error {
 		return errors.WithStack(err)
 	}
 
+	rulesKeys := slices.Collect(maps.Keys(unmarshal.Rules))
+
 	switch unmarshal.Period {
 	case Yearly:
-		_, ok := unmarshal.Rules[monthKey]
-		if !ok {
-			return errors.Errorf("yearly recurrence rules do not define key: '%s'", monthKey)
-		}
-
-		_, ok = unmarshal.Rules[dayKey]
-		if !ok {
-			return errors.Errorf("yearly recurrence rules do not define key: '%s'", dayKey)
+		if !(slices.Contains(rulesKeys, monthKey) && slices.Contains(rulesKeys, dayKey)) {
+			return errors.Errorf("rules has the following keys %v, but [\"%s\",\"%s\"] are required.", rulesKeys, monthKey, dayKey)
 		}
 	case Quarterly:
-		_, ok := unmarshal.Rules[weekKey]
-		if !ok {
-			return errors.Errorf("yearly recurrence rules do not define key: '%s'", weekKey)
-		}
-		_, ok = unmarshal.Rules[weekdayKey]
-		if !ok {
-			return errors.Errorf("yearly recurrence rules do not define key: '%s'", weekKey)
+		if !(slices.Contains(rulesKeys, weekKey) && slices.Contains(rulesKeys, weekdayKey)) {
+			return errors.Errorf("rules has the following keys %v, but [\"%s\",\"%s\"] are required.", rulesKeys, weekKey, weekdayKey)
 		}
 	case Monthly:
-		return errors.New("monthly recurrence not implemented")
+		if !(slices.Contains(rulesKeys, dayKey) || (slices.Contains(rulesKeys, weekKey) && slices.Contains(rulesKeys, weekdayKey))) {
+			return errors.Errorf("rules has the following keys %v, but [\"%s\",\"%s\"] are required.", rulesKeys, weekKey, weekdayKey)
+		}
 	case Weekly:
 		return errors.New("weekly recurrence not implemented")
 	}
