@@ -142,7 +142,9 @@ func TestMonthlyRecurrenceOnWeekday(t *testing.T) {
 	decOccur := date.New(2026, time.December, 13)
 	testDecOccur := rule.Recurrence().NextOccurrence(testDateDec)
 	assert.True(t, decOccur.Equal(*testDecOccur))
+}
 
+func TestMonthlyRecurrence_FifthWeek(t *testing.T) {
 	fifthWkJSON := []byte(`{
 		"period": "MONTHLY",
 		"rules": {
@@ -152,7 +154,8 @@ func TestMonthlyRecurrenceOnWeekday(t *testing.T) {
 		}`)
 
 	var fifthWkRule Rule
-	err = json.Unmarshal(fifthWkJSON, &fifthWkRule)
+	err := json.Unmarshal(fifthWkJSON, &fifthWkRule)
+	assert.NoError(t, err)
 
 	janFifthWkOccur := date.New(2026, time.January, 29)
 	testJanFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateJan)
