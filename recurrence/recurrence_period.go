@@ -2,7 +2,6 @@ package recurrence
 
 import (
 	"database/sql/driver"
-	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -18,7 +17,7 @@ const (
 )
 
 func ParseRP(s string) (RP, error) {
-	switch strings.ToUpper(s) {
+	switch strings.TrimSpace(strings.ToUpper(s)) {
 	case "YEARLY":
 		return Yearly, nil
 	case "QUARTERLY":
@@ -28,12 +27,12 @@ func ParseRP(s string) (RP, error) {
 	case "WEEKLY":
 		return Weekly, nil
 	default:
-		return -1, fmt.Errorf("invalid RP: %s", s)
+		return -1, errors.Errorf("invalid RP: %s", s)
 	}
 }
 
-func (rp RP) String() string {
-	switch rp {
+func (rp *RP) String() string {
+	switch *rp {
 	case Yearly:
 		return "YEARLY"
 	case Quarterly:
@@ -43,16 +42,16 @@ func (rp RP) String() string {
 	case Weekly:
 		return "WEEKLY"
 	default:
-		panic(fmt.Errorf("invalid RP value: %d", rp))
+		panic(errors.Errorf("invalid RP value: %d", rp))
 	}
 }
 
-func (rp RP) MarshalJSON() ([]byte, error) {
+func (rp *RP) MarshalJSON() ([]byte, error) {
 	return []byte(rp.String()), nil
 }
 
 func (rp *RP) UnmarshalJSON(raw []byte) error {
-	val, err := ParseRP(string(raw))
+	val, err := ParseRP(strings.Trim(string(raw), `"`))
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -61,7 +60,7 @@ func (rp *RP) UnmarshalJSON(raw []byte) error {
 	return nil
 }
 
-func (rp RP) Value() (driver.Value, error) {
+func (rp *RP) Value() (driver.Value, error) {
 	return []byte(rp.String()), nil
 }
 
