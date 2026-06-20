@@ -3,6 +3,7 @@ package recurrence
 import (
 	"time"
 
+	"github.com/ag7if/calendar/calc"
 	"github.com/fxtlabs/date"
 )
 
@@ -32,6 +33,11 @@ func NewWeekdayMonthlyRecurrence(week int, weekday time.Weekday, until *date.Dat
 }
 
 func (mr MonthlyRecurrence) determineNextOnDayOccurrence(now date.Date) *date.Date {
+	day := mr.day
+	if day > calc.ComputeLastDayOfMonth(now) {
+		day = calc.ComputeLastDayOfMonth(now)
+	}
+
 	year := now.Year()
 	month := now.Month()
 
@@ -42,14 +48,37 @@ func (mr MonthlyRecurrence) determineNextOnDayOccurrence(now date.Date) *date.Da
 		} else {
 			month += 1
 		}
+
+		if day != mr.day {
+			day = calc.ComputeLastDayOfMonth(date.New(year, month, 1))
+		}
 	}
 
-	next := date.New(year, month, mr.day)
+	next := date.New(year, month, day)
 	return &next
 }
 
 func (mr MonthlyRecurrence) determineNextWeekdayOccurrence(now date.Date) *date.Date {
-	panic("implement me!")
+	next := now
+
+	for {
+		mo := next.Month()
+		next = calc.ComputeFirstGivenWeekdayOfMonth(next, mr.weekday)
+		
+		next = next.Add(7 * (mr.week - 1))
+
+		if next.Month() != mo {
+			continue
+		}
+
+		if now.After(next) {
+			next = 
+		}
+
+
+	}
+
+	return next
 }
 
 func (mr MonthlyRecurrence) NextOccurrence(now date.Date) *date.Date {

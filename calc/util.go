@@ -7,6 +7,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+func ComputeFirstGivenWeekdayOfMonth(d date.Date, wd time.Weekday) date.Date {
+	fom := date.New(d.Year(), d.Month(), 1)
+	dist := int(wd) - int(fom.Weekday())
+	fom = fom.Add(dist)
+
+	if d.Month() != fom.Month() {
+		fom = fom.Add(7)
+	}
+
+	return fom
+}
+
 func ComputeNearestMonday(d date.Date) date.Date {
 	var dd int
 	wd := d.Weekday()
