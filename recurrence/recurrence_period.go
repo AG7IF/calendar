@@ -10,22 +10,22 @@ import (
 type RP int
 
 const (
-	Yearly RP = iota
-	Quarterly
-	Monthly
-	Weekly
+	RPYears RP = iota
+	RPQuarters
+	RPMonths
+	RPWeeks
 )
 
 func ParseRP(s string) (RP, error) {
 	switch strings.TrimSpace(strings.ToUpper(s)) {
-	case "YEARLY":
-		return Yearly, nil
-	case "QUARTERLY":
-		return Quarterly, nil
-	case "MONTHLY":
-		return Monthly, nil
-	case "WEEKLY":
-		return Weekly, nil
+	case "YEARS":
+		return RPYears, nil
+	case "QUARTERS":
+		return RPQuarters, nil
+	case "MONTHS":
+		return RPMonths, nil
+	case "WEEKS":
+		return RPWeeks, nil
 	default:
 		return -1, errors.Errorf("invalid RP: %s", s)
 	}
@@ -33,14 +33,14 @@ func ParseRP(s string) (RP, error) {
 
 func (rp *RP) String() string {
 	switch *rp {
-	case Yearly:
-		return "YEARLY"
-	case Quarterly:
-		return "QUARTERLY"
-	case Monthly:
-		return "MONTHLY"
-	case Weekly:
-		return "WEEKLY"
+	case RPYears:
+		return "YEARS"
+	case RPQuarters:
+		return "QUARTERS"
+	case RPMonths:
+		return "MONTHS"
+	case RPWeeks:
+		return "WEEKS"
 	default:
 		panic(errors.Errorf("invalid RP value: %d", rp))
 	}

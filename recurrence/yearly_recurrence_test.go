@@ -11,7 +11,7 @@ import (
 
 func TestYearlyRecurrence(t *testing.T) {
 	badJSON := []byte(`{
-	"period": "YEARLY",
+	"period": "YEARS",
 	"rules": {
 		"month": 9,
 		"weekday": 5
@@ -22,7 +22,8 @@ func TestYearlyRecurrence(t *testing.T) {
 	assert.Error(t, err)
 
 	jsonNoDeath := []byte(`{
-	"period": "YEARLY",
+	"period": "YEARS",
+	"start": "1988-09-27",
 	"rules": {
 		"month": 9,
 		"day": 27
@@ -37,12 +38,13 @@ func TestYearlyRecurrence(t *testing.T) {
 	assert.True(t, next.Equal(date.New(2026, time.September, 27)))
 
 	jsonDeath := []byte(`{
-	"period": "YEARLY",
+	"period": "YEARS",
+	"start": "1988-09-27",
+	"until": "2068-09-27",
 	"rules": {
 		"month": 9,
 		"day": 27
-	},
-	"until": "2068-09-27"
+	}
 }`)
 	var deathRule Rule
 	err = json.Unmarshal(jsonDeath, &deathRule)
@@ -51,4 +53,24 @@ func TestYearlyRecurrence(t *testing.T) {
 	next = deathRule.Recurrence().NextOccurrence(date.New(2069, time.September, 27))
 
 	assert.Nil(t, next)
+}
+
+func TestYearlyRecurrence_YearMultiples(t *testing.T) {
+	jsonRule := []byte(`{
+	"every": 5,
+	"period": "YEARS",
+	"start": "1988-09-27",
+	"rules": {
+		"month": 9,
+		"day": 27
+	}
+}`)
+	var rule Rule
+	err := json.Unmarshal(jsonRule, &rule)
+	assert.NoError(t, err)
+
+	occurence := date.New(2027, time.September, 27)
+	next := rule.Recurrence().NextOccurrence(testDateJan)
+	assert.NotNil(t, next)
+	assert.True(t, occurence.Equal(*next))
 }

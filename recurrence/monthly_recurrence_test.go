@@ -11,7 +11,8 @@ import (
 
 func TestMonthlyRecurrenceOnDay(t *testing.T) {
 	goodJSON := []byte(`{
-	"period": "MONTHLY",
+	"period": "MONTHS",
+	"start": "2026-01-31",
 	"rules": {
 			"day": 31
 	}
@@ -72,7 +73,8 @@ func TestMonthlyRecurrenceOnDay(t *testing.T) {
 
 func TestMonthlyRecurrenceOnWeekday(t *testing.T) {
 	badJSON := []byte(`{
-	"period": "MONTHLY",
+	"period": "MONTHS",
+	"start": "2026-01-11",
 	"rules": {
 		"week": 5,
 		"weekday": 5,
@@ -85,7 +87,8 @@ func TestMonthlyRecurrenceOnWeekday(t *testing.T) {
 	assert.Error(t, err)
 
 	goodJSON := []byte(`{
-	"period": "MONTHLY",
+	"period": "MONTHS",
+	"start": "2026-01-11",
 	"rules": {
 		"week": 2,
 		"weekday": 7
@@ -146,7 +149,8 @@ func TestMonthlyRecurrenceOnWeekday(t *testing.T) {
 
 func TestMonthlyRecurrence_FifthWeek(t *testing.T) {
 	fifthWkJSON := []byte(`{
-		"period": "MONTHLY",
+		"period": "MONTHS",
+		"start": "2026-01-01",
 		"rules": {
 			"week": 5,
 			"weekday": 4
@@ -176,4 +180,24 @@ func TestMonthlyRecurrence_FifthWeek(t *testing.T) {
 	decFifthWkOccur := date.New(2026, time.December, 31)
 	testDecFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateNov)
 	assert.True(t, decFifthWkOccur.Equal(*testDecFifthWkOccur))
+}
+
+func TestMonthlyRecurrence_MonthMultiples(t *testing.T) {
+	goodJSON := []byte(`{
+	"every": 2,
+	"period": "MONTHS",
+	"start": "2026-01-01",
+	"rules": {
+		"week": 2,
+		"weekday": 7
+	}
+	}`)
+
+	var rule Rule
+	err := json.Unmarshal(goodJSON, &rule)
+	assert.NoError(t, err)
+
+	occurs := date.New(2026, time.March, 8)
+	occursTest := rule.Recurrence().NextOccurrence(testDateJan)
+	assert.True(t, occurs.Equal(*occursTest))
 }

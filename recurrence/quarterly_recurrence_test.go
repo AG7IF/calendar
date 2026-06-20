@@ -11,7 +11,8 @@ import (
 
 func TestQuarterlyRecurrence(t *testing.T) {
 	badJSON := []byte(`{
-	"period": "QUARTERLY",
+	"period": "QUARTERS",
+	"start": "1988-09-27",
 	"rules": {
 		"month": 9,
 		"day": 27
@@ -22,7 +23,8 @@ func TestQuarterlyRecurrence(t *testing.T) {
 	assert.Error(t, err)
 
 	goodJSON := []byte(`{
-	"period": "QUARTERLY",
+	"period": "QUARTERS",
+	"start": "2026-01-29",
 	"rules": {
 		"week": 5,
 		"weekday": 4
