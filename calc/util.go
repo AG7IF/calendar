@@ -54,3 +54,17 @@ func TimeToLocalDate(t time.Time, timezone *time.Location) date.Date {
 func DateToLocalTime(d date.Date, timezone *time.Location) time.Time {
 	return d.In(timezone)
 }
+
+func DayOfWeekGTE(l time.Weekday, r time.Weekday) bool {
+	li := int(l)
+	if li == 0 {
+		li = 7
+	}
+
+	ri := int(r)
+	if ri == 0 {
+		ri = 7
+	}
+
+	return li >= ri
+}

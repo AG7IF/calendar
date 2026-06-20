@@ -32,8 +32,8 @@ func ParseRP(s string) (RP, error) {
 	}
 }
 
-func (r RP) String() string {
-	switch r {
+func (rp RP) String() string {
+	switch rp {
 	case Yearly:
 		return "YEARLY"
 	case Quarterly:
@@ -43,8 +43,22 @@ func (r RP) String() string {
 	case Weekly:
 		return "WEEKLY"
 	default:
-		panic(fmt.Errorf("invalid RP value: %d", r))
+		panic(fmt.Errorf("invalid RP value: %d", rp))
 	}
+}
+
+func (rp RP) MarshalJSON() ([]byte, error) {
+	return []byte(rp.String()), nil
+}
+
+func (rp *RP) UnmarshalJSON(raw []byte) error {
+	val, err := ParseRP(string(raw))
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	*rp = val
+	return nil
 }
 
 func (rp RP) Value() (driver.Value, error) {
