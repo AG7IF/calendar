@@ -3,8 +3,9 @@ package recurrence
 import (
 	"time"
 
-	"github.com/ag7if/calendar/calc"
 	"github.com/fxtlabs/date"
+
+	"github.com/ag7if/calendar/calc"
 )
 
 type MonthlyRecurrence struct {
@@ -55,6 +56,10 @@ func (mr MonthlyRecurrence) determineNextOnDayOccurrence(now date.Date) *date.Da
 	}
 
 	next := date.New(year, month, day)
+	if mr.until != nil && next.After(*mr.until) {
+		return nil
+	}
+
 	return &next
 }
 
@@ -62,23 +67,35 @@ func (mr MonthlyRecurrence) determineNextWeekdayOccurrence(now date.Date) *date.
 	next := now
 
 	for {
+		yr := next.Year()
 		mo := next.Month()
 		next = calc.ComputeFirstGivenWeekdayOfMonth(next, mr.weekday)
-		
+
 		next = next.Add(7 * (mr.week - 1))
 
 		if next.Month() != mo {
 			continue
 		}
 
-		if now.After(next) {
-			next = 
+		if now.Before(next) {
+			break
 		}
 
+		if mo == time.December {
+			yr++
+			mo = time.January
+		} else {
+			mo++
+		}
 
+		next = date.New(yr, mo, 1)
 	}
 
-	return next
+	if mr.until != nil && next.After(*mr.until) {
+		return nil
+	}
+
+	return &next
 }
 
 func (mr MonthlyRecurrence) NextOccurrence(now date.Date) *date.Date {

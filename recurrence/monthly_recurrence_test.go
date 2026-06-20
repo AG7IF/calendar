@@ -144,33 +144,33 @@ func TestMonthlyRecurrenceOnWeekday(t *testing.T) {
 	assert.True(t, decOccur.Equal(*testDecOccur))
 
 	fifthWkJSON := []byte(`{
-	"period": "MONTHLY",
-	"rules": {
-		"week": 5,
-		"weekday": 4
-	}
-	}`)
+		"period": "MONTHLY",
+		"rules": {
+			"week": 5,
+			"weekday": 4
+		}
+		}`)
 
 	var fifthWkRule Rule
 	err = json.Unmarshal(fifthWkJSON, &fifthWkRule)
 
 	janFifthWkOccur := date.New(2026, time.January, 29)
-	testJanFifthWkOccur := rule.Recurrence().NextOccurrence(testDateJan)
+	testJanFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateJan)
 	assert.True(t, janFifthWkOccur.Equal(*testJanFifthWkOccur))
 
 	aprFifthWkOccur := date.New(2026, time.April, 30)
-	testAprFifthWkOccur := rule.Recurrence().NextOccurrence(testDateFeb)
+	testAprFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateFeb)
 	assert.True(t, aprFifthWkOccur.Equal(*testAprFifthWkOccur))
 
 	julFifthWkOccur := date.New(2026, time.July, 30)
-	testJulFifthWkOccur := rule.Recurrence().NextOccurrence(testDateMay)
+	testJulFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateMay)
 	assert.True(t, julFifthWkOccur.Equal(*testJulFifthWkOccur))
 
 	octFifthWkOccur := date.New(2026, time.October, 29)
-	testOctFifthWkOccur := rule.Recurrence().NextOccurrence(testDateAug)
+	testOctFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateAug)
 	assert.True(t, octFifthWkOccur.Equal(*testOctFifthWkOccur))
 
-	decFifthWkOccur := date.New(2026, time.December, 13)
-	testDecFifthWkOccur := rule.Recurrence().NextOccurrence(testDateNov)
+	decFifthWkOccur := date.New(2026, time.December, 31)
+	testDecFifthWkOccur := fifthWkRule.Recurrence().NextOccurrence(testDateNov)
 	assert.True(t, decFifthWkOccur.Equal(*testDecFifthWkOccur))
 }
