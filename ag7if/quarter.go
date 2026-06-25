@@ -55,3 +55,20 @@ func ComputeQuarterStartMonth(qtr calendar.Q) time.Month {
 		panic(errors.Errorf("invalid quarter value: %d", qtr))
 	}
 }
+
+func ComputeQuarterStartDate(year int, qtr calendar.Q) date.Date {
+	start := ComputeWeek1StartDate(year)
+
+	switch qtr {
+	case calendar.Q1:
+		return start
+	case calendar.Q2:
+		return start.Add(13 * 7)
+	case calendar.Q3:
+		return start.Add(26 * 7)
+	case calendar.Q4:
+		return start.Add(39 * 7)
+	default:
+		panic(errors.Errorf("invalid quarter value: %d", qtr))
+	}
+}
