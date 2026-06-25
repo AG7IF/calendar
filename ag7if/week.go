@@ -4,7 +4,10 @@ import (
 	"time"
 
 	cards "github.com/ag7if/playing-cards"
+	"github.com/fxtlabs/date"
 	"github.com/pkg/errors"
+
+	"github.com/ag7if/calendar/calc"
 )
 
 var deck cards.Deck = cards.Deck{
@@ -94,4 +97,19 @@ func WeekdayLetter(wd time.Weekday) string {
 	default:
 		panic(errors.Errorf("invalid weekday value: %d", wd))
 	}
+}
+
+func ComputeWeek1StartDate(year int) date.Date {
+	start := calc.ComputeNearestMonday(date.New(year, time.January, 1))
+
+	tyr, wk := start.ISOWeek()
+	if tyr < year {
+		return start.Add(7)
+	}
+
+	if wk > 1 {
+		return start.Add(-7)
+	}
+
+	return start
 }
